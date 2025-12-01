@@ -12,7 +12,8 @@
 
 1. backend/ai/config.py에서 USE_MOCK 옵션 확인 (개발할 땐 True, 실제 모델 돌릴 땐 False)
 2. 터미널에서 실행:
-   ```cd backend
+   ```bash
+   cd backend
    uvicorn main:app --reload
    ```
 
