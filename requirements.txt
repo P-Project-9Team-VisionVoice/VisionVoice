@@ -3,6 +3,8 @@ uvicorn
 python-multipart
 requests
 torch
+torchaudio
+torchvision
 transformers
 accelerate
 qwen-vl-utils
