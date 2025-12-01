@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Backend Data
+backend/temp/*
+!backend/temp/.gitkeep
+
+# Models (너무 커서 깃허브 거부당함)
+*.bin
+*.pt
+*.pth
+
+# Mac/Windows
+.DS_Store
+Thumbs.db
