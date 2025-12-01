@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "VisionVoice MVP",
+  "version": "1.0",
+  "permissions": ["activeTab", "scripting", "desktopCapture"],
+  "host_permissions": ["http://localhost:8000/*"],
+  "action": { "default_popup": "popup.html" },
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "commands": {
+    "toggle-recording": {
+      "suggested_key": { "default": "Ctrl+Shift+S" },
+      "description": "Start/Stop Recording"
+    }
+  }
+}
