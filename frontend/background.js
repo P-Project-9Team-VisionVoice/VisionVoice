@@ -1,3 +1,4 @@
+// frontend/background.js
 chrome.commands.onCommand.addListener((command) => {
   if (command === "toggle-recording") {
     // 활성 탭에 메시지 전송
