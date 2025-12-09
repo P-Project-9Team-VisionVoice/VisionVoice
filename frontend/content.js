@@ -6,7 +6,7 @@ let audioChunks = [];
 // 1. [일반화] 모든 프레임 텍스트 재귀 추출 함수
 function getAllVisibleText(win = window) {
   let text = "";
-  
+
   try {
     // 현재 창의 텍스트 추출
     if (win.document && win.document.body) {
@@ -33,7 +33,7 @@ function getAllVisibleText(win = window) {
 // 2. [일반화] Deep Element From Point (iframe 내부 클릭용)
 function getDeepElementFromPoint(x, y) {
   let el = document.elementFromPoint(x, y);
-  
+
   // 찾은 요소가 IFRAME이라면 내부로 진입 시도
   while (el && el.tagName === 'IFRAME') {
     try {
@@ -43,7 +43,7 @@ function getDeepElementFromPoint(x, y) {
 
       // iframe 내부에서 다시 요소 찾기
       const innerEl = el.contentDocument.elementFromPoint(innerX, innerY);
-      
+
       if (innerEl) {
         el = innerEl; // 타겟 업데이트
         x = innerX;   // 좌표 업데이트 (중첩 iframe 대비)
@@ -120,7 +120,7 @@ async function processRequest(audioBlob, screenshotDataUrl) {
   if (audioBlob.size === 0) console.warn("⚠️ 오디오 데이터 없음");
 
   const screenshotBlob = dataURItoBlob(screenshotDataUrl);
-  
+
   // 일반화된 함수로 텍스트 추출 (최대 3000자 제한)
   const fullText = getAllVisibleText(window);
   console.log(`📝 통합 텍스트 길이: ${fullText.length}자`);
@@ -131,8 +131,8 @@ async function processRequest(audioBlob, screenshotDataUrl) {
   formData.append("dom", fullText.substring(0, 3000) || "텍스트 없음");
 
   try {
-    const SERVER_URL = "http://localhost:8000"; // 필요 시 ngrok 주소로 변경
-    // ngrok 주소 = "https://d44706e0501f.ngrok-free.app"
+    // const SERVER_URL = "http://localhost:8000";
+    const SERVER_URL = "https://3f6bd2949154.ngrok-free.app";
 
     console.log("🚀 서버로 전송 중...");
     const response = await fetch(`${SERVER_URL}/process`, {
@@ -152,41 +152,41 @@ async function processRequest(audioBlob, screenshotDataUrl) {
         console.error("오디오 재생 오류:", e);
       }
     } else if (data.audio_url) {
-       // 혹시 URL 방식일 경우 대비
-       new Audio(data.audio_url).play().catch(e => console.warn("Mixed Content:", e));
+      // 혹시 URL 방식일 경우 대비
+      new Audio(data.audio_url).play().catch(e => console.warn("Mixed Content:", e));
     }
 
     // 2. 액션 수행 (클릭)
     if (data.action && data.action.action === "click") {
-        const ratio = window.devicePixelRatio || 1;
-        const x = data.action.x_raw / ratio; 
-        const y = data.action.y_raw / ratio;
+      const ratio = window.devicePixelRatio || 1;
+      const x = data.action.x_raw / ratio;
+      const y = data.action.y_raw / ratio;
 
-        console.log(`🖱️ 클릭 시도: ${x}, ${y}`);
-        showClickIndicator(x, y);
+      console.log(`🖱️ 클릭 시도: ${x}, ${y}`);
+      showClickIndicator(x, y);
 
-        // 일반화된 Deep Element 찾기 함수 사용
-        const element = getDeepElementFromPoint(x, y);
-        
-        if (element) {
-            console.log("🎯 타겟 요소 발견:", element);
-            
-            element.focus(); 
-            element.click();
-            
-            // dispatchEvent (React/Vue 사이트 대응)
-            ['mousedown', 'mouseup', 'click'].forEach(evt => {
-                element.dispatchEvent(new MouseEvent(evt, {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: x,
-                    clientY: y
-                }));
-            });
-        } else {
-            console.warn("❌ 요소를 찾을 수 없습니다.");
-        }
+      // 일반화된 Deep Element 찾기 함수 사용
+      const element = getDeepElementFromPoint(x, y);
+
+      if (element) {
+        console.log("🎯 타겟 요소 발견:", element);
+
+        element.focus();
+        element.click();
+
+        // dispatchEvent (React/Vue 사이트 대응)
+        ['mousedown', 'mouseup', 'click'].forEach(evt => {
+          element.dispatchEvent(new MouseEvent(evt, {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: x,
+            clientY: y
+          }));
+        });
+      } else {
+        console.warn("❌ 요소를 찾을 수 없습니다.");
+      }
     }
   } catch (error) {
     console.error("❌ 처리 에러:", error);
@@ -213,7 +213,7 @@ function showClickIndicator(x, y) {
     boxShadow: "0 0 10px white", transition: "transform 0.2s"
   });
   document.body.appendChild(dot);
-  
+
   // 클릭 애니메이션
   setTimeout(() => dot.style.transform = "scale(0.5)", 50);
   setTimeout(() => dot.remove(), 2000);

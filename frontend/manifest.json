@@ -3,7 +3,7 @@
   "name": "VisionVoice MVP",
   "version": "1.0",
   "permissions": ["activeTab", "scripting", "desktopCapture"],
-  "host_permissions": ["http://localhost:8000/*"],
+  "host_permissions": ["http://localhost:8000/*", "https://3f6bd2949154.ngrok-free.app"],
   "action": { "default_popup": "popup.html" },
   "background": { "service_worker": "background.js" },
   "content_scripts": [
