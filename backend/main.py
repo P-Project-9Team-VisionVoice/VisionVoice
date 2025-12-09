@@ -7,7 +7,7 @@ import os
 
 # 커스텀 AI 모듈 임포트
 from ai.stt import STTModule
-from ai.agent import OpenCUAgent
+from ai.simple_agent import OpenCUAgent
 from ai.tts import TTSModule
 
 app = FastAPI()
@@ -16,6 +16,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
