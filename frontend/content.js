@@ -3,56 +3,43 @@
 let mediaRecorder;
 let audioChunks = [];
 
-// 1. [일반화] 모든 프레임 텍스트 재귀 추출 함수
+// 1. 모든 프레임 텍스트 재귀 추출
 function getAllVisibleText(win = window) {
   let text = "";
-  
   try {
-    // 현재 창의 텍스트 추출
     if (win.document && win.document.body) {
       text += win.document.body.innerText + "\n";
     }
-
-    // 내부의 모든 iframe/frame 순회
     for (let i = 0; i < win.frames.length; i++) {
       try {
-        // 재귀 호출 (iframe 안의 iframe도 처리)
         text += getAllVisibleText(win.frames[i]);
       } catch (e) {
-        // Cross-Origin(보안) 문제로 접근 못하는 iframe은 조용히 무시
-        // console.warn("접근 불가 iframe 패스");
+        // Cross-Origin iframe은 무시
       }
     }
   } catch (e) {
     console.warn("텍스트 추출 중 에러:", e);
   }
-
   return text;
 }
 
-// 2. [일반화] Deep Element From Point (iframe 내부 클릭용)
+// 2. Deep Element From Point (iframe 내부까지)
 function getDeepElementFromPoint(x, y) {
   let el = document.elementFromPoint(x, y);
-  
-  // 찾은 요소가 IFRAME이라면 내부로 진입 시도
-  while (el && el.tagName === 'IFRAME') {
+  while (el && el.tagName === "IFRAME") {
     try {
       const rect = el.getBoundingClientRect();
-      const innerX = x - rect.left; // iframe 기준 상대 좌표 계산
+      const innerX = x - rect.left;
       const innerY = y - rect.top;
-
-      // iframe 내부에서 다시 요소 찾기
       const innerEl = el.contentDocument.elementFromPoint(innerX, innerY);
-      
       if (innerEl) {
-        el = innerEl; // 타겟 업데이트
-        x = innerX;   // 좌표 업데이트 (중첩 iframe 대비)
+        el = innerEl;
+        x = innerX;
         y = innerY;
       } else {
-        break; // 내부에 요소 없으면 iframe 자체를 클릭
+        break;
       }
     } catch (e) {
-      // Cross-Origin iframe이라 내부 접근 불가하면 여기서 멈춤
       break;
     }
   }
@@ -88,7 +75,6 @@ async function startRecording() {
 
     const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
 
-    // 백그라운드에 스크린샷 요청
     chrome.runtime.sendMessage({ action: "capture" }, (dataUrl) => {
       if (dataUrl) {
         processRequest(audioBlob, dataUrl);
@@ -100,9 +86,7 @@ async function startRecording() {
 }
 
 function stopRecording() {
-  if (mediaRecorder) {
-    mediaRecorder.stop();
-  }
+  if (mediaRecorder) mediaRecorder.stop();
 }
 
 function dataURItoBlob(dataURI) {
@@ -120,8 +104,7 @@ async function processRequest(audioBlob, screenshotDataUrl) {
   if (audioBlob.size === 0) console.warn("⚠️ 오디오 데이터 없음");
 
   const screenshotBlob = dataURItoBlob(screenshotDataUrl);
-  
-  // 일반화된 함수로 텍스트 추출 (최대 3000자 제한)
+
   const fullText = getAllVisibleText(window);
   console.log(`📝 통합 텍스트 길이: ${fullText.length}자`);
 
@@ -131,8 +114,8 @@ async function processRequest(audioBlob, screenshotDataUrl) {
   formData.append("dom", fullText.substring(0, 3000) || "텍스트 없음");
 
   try {
-    const SERVER_URL = "http://localhost:8000"; // 필요 시 ngrok 주소로 변경
-    // ngrok 주소 = "https://d44706e0501f.ngrok-free.app"
+    // const SERVER_URL = "http://localhost:8000";
+    const SERVER_URL = "https://3f6bd2949154.ngrok-free.app";
 
     console.log("🚀 서버로 전송 중...");
     const response = await fetch(`${SERVER_URL}/process`, {
@@ -143,50 +126,115 @@ async function processRequest(audioBlob, screenshotDataUrl) {
     const data = await response.json();
     console.log("✅ 결과 받음:", data);
 
-    // 1. 오디오 재생 (Base64)
+    // 1. 오디오 재생
     if (data.audio_base64) {
       try {
         const audio = new Audio("data:audio/mp3;base64," + data.audio_base64);
-        audio.play().catch(e => console.warn("자동 재생 차단됨:", e));
+        audio.play().catch((e) => console.warn("자동 재생 차단됨:", e));
       } catch (e) {
         console.error("오디오 재생 오류:", e);
       }
     } else if (data.audio_url) {
-       // 혹시 URL 방식일 경우 대비
-       new Audio(data.audio_url).play().catch(e => console.warn("Mixed Content:", e));
+      new Audio(data.audio_url)
+        .play()
+        .catch((e) => console.warn("Mixed Content:", e));
     }
 
-    // 2. 액션 수행 (클릭)
-    if (data.action && data.action.action === "click") {
-        const ratio = window.devicePixelRatio || 1;
-        const x = data.action.x_raw / ratio; 
-        const y = data.action.y_raw / ratio;
+    // 2. 액션 수행
+    if (data.action) {
+      const act = data.action.action;
 
-        console.log(`🖱️ 클릭 시도: ${x}, ${y}`);
-        showClickIndicator(x, y);
+      if (act === "click") {
+        const hasCoord =
+          data.action.x_raw != null && data.action.y_raw != null;
 
-        // 일반화된 Deep Element 찾기 함수 사용
-        const element = getDeepElementFromPoint(x, y);
-        
-        if (element) {
-            console.log("🎯 타겟 요소 발견:", element);
-            
-            element.focus(); 
-            element.click();
-            
-            // dispatchEvent (React/Vue 사이트 대응)
-            ['mousedown', 'mouseup', 'click'].forEach(evt => {
-                element.dispatchEvent(new MouseEvent(evt, {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true,
-                    clientX: x,
-                    clientY: y
-                }));
+        if (hasCoord) {
+          const ratio = window.devicePixelRatio || 1;
+          const x = data.action.x_raw / ratio;
+          const y = data.action.y_raw / ratio;
+
+          console.log(`🖱️ 좌표 클릭 시도: ${x}, ${y}`);
+          showClickIndicator(x, y);
+          const element = getDeepElementFromPoint(x, y);
+          if (element) {
+            element.focus();
+            ["mousedown", "mouseup", "click"].forEach((evt) => {
+              element.dispatchEvent(
+                new MouseEvent(evt, {
+                  view: window,
+                  bubbles: true,
+                  cancelable: true,
+                  clientX: x,
+                  clientY: y,
+                }),
+              );
             });
-        } else {
+          } else {
             console.warn("❌ 요소를 찾을 수 없습니다.");
+          }
+        } else {
+          // 좌표 없는 click: target_name으로 DOM에서 추정
+          const label = data.action.target || "";
+          console.log(`🖱️ 텍스트 기반 클릭 시도: ${label}`);
+          const candidates = Array.from(
+            document.querySelectorAll("button, a, div, span"),
+          );
+          const el = candidates.find((e) =>
+            e.innerText && e.innerText.includes(label),
+          );
+          if (el) {
+            showClickIndicator(
+              el.getBoundingClientRect().left + el.offsetWidth / 2,
+              el.getBoundingClientRect().top + el.offsetHeight / 2,
+            );
+            el.click();
+          } else {
+            console.warn("❌ 텍스트로 요소를 찾을 수 없습니다.");
+          }
         }
+      } else if (act === "scroll") {
+        const dir = data.action.direction || "down";
+        const amount = data.action.amount || 300;
+        const dy = dir === "up" ? -amount : amount;
+        console.log(`🧷 스크롤: ${dir} ${amount}px`);
+        window.scrollBy({ top: dy, behavior: "smooth" });
+      } else if (act === "input") {
+        const text = data.action.text || "";
+        console.log(`⌨️ 입력 시도: "${text}"`);
+        let el = document.activeElement;
+        if (!el || el === document.body) {
+          el = document.querySelector("input[type='text'], input:not([type]), textarea");
+        }
+        if (el) {
+          el.focus();
+          el.value = text;
+          el.dispatchEvent(new Event("input", { bubbles: true }));
+          el.dispatchEvent(new Event("change", { bubbles: true }));
+        } else {
+          console.warn("❌ 입력창을 찾을 수 없습니다.");
+        }
+      } else if (act === "navigate") {
+        console.log(`🌐 페이지 이동 시도: ${data.action.target}`);
+        const links = Array.from(document.querySelectorAll("a, button"));
+        const target = links.find((l) =>
+          l.innerText && l.innerText.includes(data.action.target),
+        );
+        if (target) target.click();
+        else console.warn("❌ 이동 대상 링크를 찾을 수 없습니다.");
+      } else if (act === "close") {
+        console.log(`❌ 팝업 닫기 시도: ${data.action.target}`);
+        const candidates = Array.from(
+          document.querySelectorAll("button, span, div"),
+        );
+        const label = data.action.target || "";
+        const target = candidates.find(
+          (el) =>
+            /닫기|close|×/i.test(el.innerText || "") ||
+            (label && el.innerText && el.innerText.includes(label)),
+        );
+        if (target) target.click();
+        else console.warn("❌ 닫기 버튼을 찾을 수 없습니다.");
+      }
     }
   } catch (error) {
     console.error("❌ 처리 에러:", error);
@@ -207,14 +255,19 @@ function playBeep(type) {
 function showClickIndicator(x, y) {
   const dot = document.createElement("div");
   Object.assign(dot.style, {
-    position: "fixed", left: x + "px", top: y + "px",
-    width: "20px", height: "20px", backgroundColor: "rgba(255, 0, 0, 0.7)",
-    borderRadius: "50%", zIndex: "999999", pointerEvents: "none",
-    boxShadow: "0 0 10px white", transition: "transform 0.2s"
+    position: "fixed",
+    left: x + "px",
+    top: y + "px",
+    width: "20px",
+    height: "20px",
+    backgroundColor: "rgba(255, 0, 0, 0.7)",
+    borderRadius: "50%",
+    zIndex: "999999",
+    pointerEvents: "none",
+    boxShadow: "0 0 10px white",
+    transition: "transform 0.2s",
   });
   document.body.appendChild(dot);
-  
-  // 클릭 애니메이션
-  setTimeout(() => dot.style.transform = "scale(0.5)", 50);
+  setTimeout(() => (dot.style.transform = "scale(0.5)"), 50);
   setTimeout(() => dot.remove(), 2000);
 }

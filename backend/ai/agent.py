@@ -6,7 +6,9 @@ from PIL import Image
 import math
 
 if not USE_MOCK_AGENT:
-    from transformers import AutoTokenizer, AutoModel, AutoImageProcessor, PreTrainedModel, TextStreamer
+    from transformers.models.auto.tokenization_auto import AutoTokenizer
+    from transformers.models.auto.modeling_auto import AutoModel
+    from transformers.models.auto.image_processing_auto import AutoImageProcessor
 
 # Qwen2.5-VL의 Smart Resize 로직 (좌표 변환용)
 def smart_resize(height, width, factor=28, min_pixels=3136, max_pixels=12845056):
@@ -29,10 +31,6 @@ class OpenCUAgent:
     def __init__(self):
         if not USE_MOCK_AGENT:
             print("🧠 OpenCUA-7B 모델 로딩 중... (ARM64 최적화: SDPA 가속 ⚡️)")
-            
-            # 1. 몽키 패치
-            if not hasattr(PreTrainedModel, "_supports_sdpa"):
-                PreTrainedModel._supports_sdpa = False 
 
             model_path = "xlangai/OpenCUA-7B"
 
@@ -42,13 +40,18 @@ class OpenCUAgent:
                 trust_remote_code=True
             )
             
+            print(f"🔍 CUDA 상태: available={torch.cuda.is_available()}, device_count={torch.cuda.device_count()}")
+            if torch.cuda.is_available():
+                print(f"🔍 현재 GPU: {torch.cuda.get_device_name(0)}")
+            
             # 3. 모델
             self.model = AutoModel.from_pretrained(
                 model_path,
-                torch_dtype=torch.bfloat16,
-                device_map="cuda", 
+                dtype=torch.bfloat16,
+                device_map="auto", 
                 trust_remote_code=True,
-                attn_implementation="sdpa"
+                attn_implementation="eager",
+                low_cpu_mem_usage=True,
             )
 
             # transformers 라이브러리가 요구하는 키값이 없어서 발생하는 에러를 방지
@@ -134,8 +137,6 @@ class OpenCUAgent:
         print(f"⏳ AI 생각 시작... (명령어: {command})")
         print("-" * 30)
 
-        streamer = TextStreamer(self.tokenizer, skip_prompt=True, skip_special_tokens=True)
-
         try:
             with torch.no_grad():
                 generated_ids = self.model.generate(
@@ -143,11 +144,11 @@ class OpenCUAgent:
                     attention_mask=attention_mask,
                     pixel_values=pixel_values,
                     grid_thws=grid_thws,
-                    max_new_tokens=256,
-                    do_sample=False,  # False일 때는 temperature를 쓰면 안 됨
-                    num_beams=1,
+                    max_new_tokens=128,
+                    do_sample=False,
                     pad_token_id=self.tokenizer.eos_token_id,
-                    streamer=streamer
+                    use_cache=True,
+                    return_dict_in_generate=False,
                 )
         except Exception as e:
             print(f"❌ 추론 에러: {e}")
