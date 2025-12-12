@@ -54,7 +54,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 console.log("📡 Fetching localhost:8000/process from background...");
 
                 // run_tunnel.py 실행해서 나온 local Fast API ngrok 주소
-                const NEW_NGROK_URL = "https://1ee624642065.ngrok-free.app/process";
+                const NEW_NGROK_URL = "https://4eb074ffcd91.ngrok-free.app/process";
 
                 const res = await fetch(NEW_NGROK_URL, {
                     method: "POST",
@@ -71,6 +71,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 // 1. 일단 받습니다.
                 let result = await res.json();
 
+                // ⭐ [핵심 수정] result가 객체가 아니라 '문자열'로 왔다면, 강제로 객체로 만듭니다!
                 if (typeof result === "string") {
                     console.log("⚠️ 결과가 문자열입니다. JSON 파싱을 시도합니다.");
                     const cleanJson = result.replace(/```json|```/g, "").trim();
