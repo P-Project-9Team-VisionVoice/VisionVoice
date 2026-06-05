@@ -1,0 +1,250 @@
+{
+  "date": "2026-06-05 17:30:09",
+  "model": "Qwen2-VL-7B",
+  "eval_type": "real_screenshots",
+  "hardware": "DGX Spark (GB10)",
+  "total_scenarios": 10,
+  "correct": 10,
+  "accuracy": 100.0,
+  "avg_latency_sec": 15.16419596672058,
+  "site_stats": {
+    "naver": {
+      "total": 3,
+      "correct": 3
+    },
+    "musinsa": {
+      "total": 3,
+      "correct": 3
+    },
+    "youtube": {
+      "total": 3,
+      "correct": 3
+    },
+    "spreadsheet": {
+      "total": 1,
+      "correct": 1
+    }
+  },
+  "results": [
+    {
+      "id": "naver_m_01",
+      "site": "naver",
+      "image": "/home/devlofi/HyeWon/taining_datasets/naver_main.png",
+      "command": "검색창에 '오늘 날씨' 입력해줘",
+      "expected_action": "input",
+      "predicted_action": "input",
+      "bbox": [
+        390,
+        191,
+        609,
+        206
+      ],
+      "target": "검색창",
+      "speech": "검색창에 '오늘 날씨'를 입력해주세요.",
+      "raw_output": "{\"action\": \"input\", \"target\": \"검색창\", \"bbox\": [390, 191, 609, 206], \"speech\": \"검색창에 '오늘 날씨'를 입력해주세요.\"}",
+      "elapsed_sec": 14.148018836975098,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "naver_m_02",
+      "site": "naver",
+      "image": "/home/devlofi/HyeWon/taining_datasets/naver_main.png",
+      "command": "이 화면 어떻게 구성돼 있는지 설명해줘",
+      "expected_action": "explain",
+      "predicted_action": "explain",
+      "bbox": null,
+      "target": null,
+      "speech": "이 화면은 네이버 웹사이트의 메인 페이지입니다. 상단에는 검색창과 여러 링크가 있으며, 중앙에는 다양한 콘텐츠가 표시됩니다. 왼쪽에는 뉴스, 게임, 쇼핑 등 다양한 섹션들이 있으며, 오른쪽에는 광고와 관련된 섹션들이 있습니다. 아래에는 다양한 콘텐츠가 표시되어 있습니다.",
+      "raw_output": "{\"action\": \"explain\", \"speech\": \"이 화면은 네이버 웹사이트의 메인 페이지입니다. 상단에는 검색창과 여러 링크가 있으며, 중앙에는 다양한 콘텐츠가 표시됩니다. 왼쪽에는 뉴스, 게임, 쇼핑 등 다양한 섹션들이 있으며, 오른쪽에는 광고와 관련된 섹션들이 있습니다. 아래에는 다양한 콘텐츠가 표시되어 있습니다.\"}",
+      "elapsed_sec": 17.93447256088257,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "naver_s_01",
+      "site": "naver",
+      "image": "/home/devlofi/HyeWon/taining_datasets/naver_search_input_open.png",
+      "command": "검색어 입력창을 클릭해줘",
+      "expected_action": "click",
+      "predicted_action": "click",
+      "bbox": [
+        490,
+        191,
+        552,
+        206
+      ],
+      "target": "검색어 입력창",
+      "speech": "검색어 입력창을 클릭했습니다.",
+      "raw_output": "{\"action\": \"click\", \"target\": \"검색어 입력창\", \"bbox\": [490, 191, 552, 206], \"speech\": \"검색어 입력창을 클릭했습니다.\"}",
+      "elapsed_sec": 13.087971925735474,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "musinsa_m_01",
+      "site": "musinsa",
+      "image": "/home/devlofi/HyeWon/taining_datasets/musinsa_main.png",
+      "command": "검색창 클릭해줘",
+      "expected_action": "click",
+      "predicted_action": "click",
+      "bbox": [
+        390,
+        100,
+        609,
+        112
+      ],
+      "target": "검색창",
+      "speech": "검색창을 클릭했습니다.",
+      "raw_output": "{\"action\": \"click\", \"target\": \"검색창\", \"bbox\": [390, 100, 609, 112], \"speech\": \"검색창을 클릭했습니다.\"}",
+      "elapsed_sec": 12.75696086883545,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "musinsa_d_01",
+      "site": "musinsa",
+      "image": "/home/devlofi/HyeWon/taining_datasets/musinsa_detail_samyang_group_special_T.png",
+      "command": "이 상품 페이지 설명해줘",
+      "expected_action": "explain",
+      "predicted_action": "explain",
+      "bbox": [
+        0,
+        0,
+        1000,
+        1000
+      ],
+      "target": "상품 페이지",
+      "speech": "이 상품 페이지는 상품 이미지, 상품 설명, 가격, 구매 버튼, 리뷰 등이 포함되어 있습니다. 상품 이미지는 상품을 보여주고, 상품 설명은 상품의 특징과 정보를 제공합니다. 가격은 상품의 현재 가격을 나타내며, 구매 버튼을 클릭하면 상품을 구매할 수 있습니다. 리뷰는 다른 사용자가 상품에 대한 의견을 공유하고 있습니다.",
+      "raw_output": "{\"action\": \"explain\", \"target\": \"상품 페이지\", \"bbox\": [0,0,1000,1000], \"speech\": \"이 상품 페이지는 상품 이미지, 상품 설명, 가격, 구매 버튼, 리뷰 등이 포함되어 있습니다. 상품 이미지는 상품을 보여주고, 상품 설명은 상품의 특징과 정보를 제공합니다. 가격은 상품의 현재 가격을 나타내며, 구매 버튼을 클릭하면 상품을 구매할 수 있습니다. 리뷰는 다른 사용자가 상품에 대한 의견을 공유하고 있습니다.\"}",
+      "elapsed_sec": 20.50979447364807,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "musinsa_d_02",
+      "site": "musinsa",
+      "image": "/home/devlofi/HyeWon/taining_datasets/musinsa_short_sleeve_search.png",
+      "command": "아래로 스크롤해줘",
+      "expected_action": "scroll",
+      "predicted_action": "scroll",
+      "bbox": [
+        0,
+        0,
+        1000,
+        1000
+      ],
+      "target": "viewport",
+      "speech": "아래로 스크롤하겠습니다.",
+      "raw_output": "{\"action\": \"scroll\", \"target\": \"viewport\", \"bbox\": [0,0,1000,1000], \"speech\": \"아래로 스크롤하겠습니다.\"}",
+      "elapsed_sec": 12.366552829742432,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "youtube_m_01",
+      "site": "youtube",
+      "image": "/home/devlofi/HyeWon/taining_datasets/youtube_main.png",
+      "command": "검색창에 '먹방' 입력해줘",
+      "expected_action": "input",
+      "predicted_action": "input",
+      "bbox": [
+        350,
+        100,
+        500,
+        112
+      ],
+      "target": "검색창",
+      "speech": "검색창에 '먹방'을 입력해주세요.",
+      "raw_output": "{\"action\": \"input\", \"target\": \"검색창\", \"bbox\": [350, 100, 500, 112], \"speech\": \"검색창에 '먹방'을 입력해주세요.\"}",
+      "elapsed_sec": 13.2251455783844,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "youtube_m_02",
+      "site": "youtube",
+      "image": "/home/devlofi/HyeWon/taining_datasets/youtube_main.png",
+      "command": "화면 설명해줘",
+      "expected_action": "explain",
+      "predicted_action": "explain",
+      "bbox": null,
+      "target": null,
+      "speech": "이 화면은 YouTube 웹사이트의 메인 페이지입니다. 페이지의 상단에는 검색창과 여러 링크가 있습니다. 페이지의 왼쪽에는 채널 목록과 채널 정보가 있으며, 오른쪽에는 동영상 목록이 있습니다. 각 동영상에는 제목, 시간, 좋아요 수, 댓글 수 등이 표시되어 있습니다.",
+      "raw_output": "{\"action\": \"explain\", \"speech\": \"이 화면은 YouTube 웹사이트의 메인 페이지입니다. 페이지의 상단에는 검색창과 여러 링크가 있습니다. 페이지의 왼쪽에는 채널 목록과 채널 정보가 있으며, 오른쪽에는 동영상 목록이 있습니다. 각 동영상에는 제목, 시간, 좋아요 수, 댓글 수 등이 표시되어 있습니다.\"}",
+      "elapsed_sec": 16.68800926208496,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "youtube_c_01",
+      "site": "youtube",
+      "image": "/home/devlofi/HyeWon/taining_datasets/youtube_comments.png",
+      "command": "아래로 스크롤해서 댓글 더 보기",
+      "expected_action": "scroll",
+      "predicted_action": "scroll",
+      "bbox": [
+        100,
+        150,
+        990,
+        990
+      ],
+      "target": "comment area",
+      "speech": "아래로 스크롤하여 댓글을 더 볼 수 있습니다.",
+      "raw_output": "{\"action\": \"scroll\", \"target\": \"comment area\", \"bbox\": [100, 150, 990, 990], \"speech\": \"아래로 스크롤하여 댓글을 더 볼 수 있습니다.\"}",
+      "elapsed_sec": 13.480631828308105,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "sheet_01",
+      "site": "spreadsheet",
+      "image": "/home/devlofi/HyeWon/taining_datasets/spreadsheets_Gradu_list.png",
+      "command": "이 스프레드시트 내용 설명해줘",
+      "expected_action": "explain",
+      "predicted_action": "explain",
+      "bbox": [
+        0,
+        0,
+        1000,
+        1000
+      ],
+      "target": "Sheet1",
+      "speech": "이 스프레드시트는 K15라는 제목으로 구성되어 있습니다. 총 42행에 걸쳐 다양한 프로젝트명과 관련된 정보가 기록되어 있습니다. 각 행은 프로젝트명, 개발자, 기간 등 다양한 정보를 포함하고 있습니다.",
+      "raw_output": "{\"action\": \"explain\", \"target\": \"Sheet1\", \"bbox\": [0,0,1000,1000], \"speech\": \"이 스프레드시트는 K15라는 제목으로 구성되어 있습니다. 총 42행에 걸쳐 다양한 프로젝트명과 관련된 정보가 기록되어 있습니다. 각 행은 프로젝트명, 개발자, 기간 등 다양한 정보를 포함하고 있습니다.\"}",
+      "elapsed_sec": 17.444401502609253,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    }
+  ]
+}

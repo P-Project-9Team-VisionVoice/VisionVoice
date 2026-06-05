@@ -1,0 +1,290 @@
+[
+  {
+    "id": "naver_search_input_open_00",
+    "image": "/home/devlofi/HyeWon/taining_datasets/naver_search_input_open.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n이 화면을 설명해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"explain\", \"target\": \"네이버 메인 화면\", \"bbox\": [0, 0, 260, 476], \"speech\": \"네이버 메인 화면입니다. 검색창, 뉴스, 쇼핑, 광고 등 다양한 정보가 표시되어 있습니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "nonmae_landing_data_section_13",
+    "image": "/home/devlofi/HyeWon/taining_datasets/nonmae_landing_data_section.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n상단으로 이동 버튼을 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"상단으로 이동 버튼\", \"bbox\": [251, 429, 256, 440], \"speech\": \"상단으로 이동 버튼을 클릭했습니다. 화면 상단으로 이동합니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "naver_open_talks_04",
+    "image": "/home/devlofi/HyeWon/taining_datasets/naver_open_talks.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n엔터 버튼을 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"엔터\", \"bbox\": [98, 87, 109, 104], \"speech\": \"엔터테인먼트 관련 톡을 확인할 수 있습니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "naver_main_08",
+    "image": "/home/devlofi/HyeWon/taining_datasets/naver_main.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n부동산을 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"부동산 아이콘\", \"bbox\": [133, 129, 139, 156], \"speech\": \"부동산 서비스로 이동합니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "naver_main_07",
+    "image": "/home/devlofi/HyeWon/taining_datasets/naver_main.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n증권을 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"증권 아이콘\", \"bbox\": [125, 129, 131, 156], \"speech\": \"증권 서비스로 이동합니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "nonmae_landing_hero_09",
+    "image": "/home/devlofi/HyeWon/taining_datasets/nonmae_landing_hero.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n홍익대 첨삭 리뷰를 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"홍익대 첨삭 리뷰\", \"bbox\": [213, 281, 260, 381], \"speech\": \"홍익대 첨삭 리뷰를 클릭했습니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "naver_search_input_open_04",
+    "image": "/home/devlofi/HyeWon/taining_datasets/naver_search_input_open.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n뉴스탭 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"뉴스탭\", \"bbox\": [44, 245, 66, 255], \"speech\": \"뉴스탭으로 이동합니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "naver_serach_cortis_12",
+    "image": "/home/devlofi/HyeWon/taining_datasets/naver_serach_cortis.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n공유 버튼을 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"공유 버튼\", \"bbox\": [249, 95, 254, 103], \"speech\": \"공유 버튼을 클릭했습니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "nonmae_landing_data_section_02",
+    "image": "/home/devlofi/HyeWon/taining_datasets/nonmae_landing_data_section.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n이용 요금 메뉴를 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"이용 요금 메뉴\", \"bbox\": [180, 62, 187, 72], \"speech\": \"이용 요금 메뉴를 클릭했습니다. 서비스 이용 비용에 대한 정보를 확인할 수 있습니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "musinsa_detail_samyang_group_special_T_00",
+    "image": "/home/devlofi/HyeWon/taining_datasets/musinsa_detail_samyang_group_special_T.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n이 페이지의 전체 내용을 설명해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"explain\", \"target\": \"상품 상세 페이지 전체 설명\", \"bbox\": [0, 0, 260, 476], \"speech\": \"이 페이지는 삼양그룹의 '보통 티가 아니다 스페셜티' 티셔츠 상세 페이지입니다. 가격은 19,900원이며, 구매 버튼과 사이즈 선택이 가능합니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "naver_open_talks_08",
+    "image": "/home/devlofi/HyeWon/taining_datasets/naver_open_talks.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n폭싹 속았수다 톡을 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"폭싹 속았수다\", \"bbox\": [142, 266, 195, 293], \"speech\": \"폭싹 속았수다 톡으로 이동합니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "musinsa_short_sleeve_search_04",
+    "image": "/home/devlofi/HyeWon/taining_datasets/musinsa_short_sleeve_search.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n사이즈 필터 버튼을 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"사이즈 필터 버튼\", \"bbox\": [89, 181, 96, 192], \"speech\": \"사이즈 필터 버튼을 클릭했습니다. 원하는 사이즈를 선택할 수 있습니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "nonmae_landing_data_section_11",
+    "image": "/home/devlofi/HyeWon/taining_datasets/nonmae_landing_data_section.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n모범답안 비교뷰 버튼을 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"모범답안 비교뷰 버튼\", \"bbox\": [91, 351, 102, 359], \"speech\": \"모범답안 비교뷰 버튼을 클릭했습니다. 모범답안과 비교해볼 수 있는 서비스로 이동합니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "youtube_ad_02",
+    "image": "/home/devlofi/HyeWon/taining_datasets/youtube_ad.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n재생 버튼을 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"재생/일시정지 버튼\", \"bbox\": [10, 413, 16, 430], \"speech\": \"동영상 재생이 시작되었습니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "nonmae_landing_hero_04",
+    "image": "/home/devlofi/HyeWon/taining_datasets/nonmae_landing_hero.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n이지홍님 메뉴를 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"이지홍님 메뉴\", \"bbox\": [191, 62, 197, 71], \"speech\": \"이지홍님 메뉴를 클릭했습니다.\"}"
+      }
+    ]
+  },
+  {
+    "id": "nonmae_landing_data_section_09",
+    "image": "/home/devlofi/HyeWon/taining_datasets/nonmae_landing_data_section.png",
+    "conversations": [
+      {
+        "from": "system",
+        "value": "당신은 시각장애인을 위한 웹 브라우저 제어 AI입니다. 사용자의 음성 명령과 현재 화면 스크린샷을 분석하여 수행해야 할 행동을 JSON 형식으로만 출력하세요.\n출력 형식: {\"action\": \"click|input|scroll|explain\", \"target\": \"요소명\", \"bbox\": [x1,y1,x2,y2], \"speech\": \"한국어 안내\"}"
+      },
+      {
+        "from": "human",
+        "value": "<image>\n5영역 기반 진단 버튼을 클릭해줘"
+      },
+      {
+        "from": "gpt",
+        "value": "{\"action\": \"click\", \"target\": \"5영역 기반 진단 버튼\", \"bbox\": [66, 351, 78, 359], \"speech\": \"5영역 기반 진단 버튼을 클릭했습니다. 5영역 기반 진단 서비스로 이동합니다.\"}"
+      }
+    ]
+  }
+]

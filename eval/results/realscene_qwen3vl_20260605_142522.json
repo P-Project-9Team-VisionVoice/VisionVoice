@@ -1,0 +1,250 @@
+{
+  "date": "2026-06-05 14:25:22",
+  "model": "Qwen3-VL-8B",
+  "eval_type": "real_screenshots",
+  "hardware": "DGX Spark (GB10)",
+  "total_scenarios": 10,
+  "correct": 10,
+  "accuracy": 100.0,
+  "avg_latency_sec": 13.9806156873703,
+  "site_stats": {
+    "naver": {
+      "total": 3,
+      "correct": 3
+    },
+    "musinsa": {
+      "total": 3,
+      "correct": 3
+    },
+    "youtube": {
+      "total": 3,
+      "correct": 3
+    },
+    "spreadsheet": {
+      "total": 1,
+      "correct": 1
+    }
+  },
+  "results": [
+    {
+      "id": "naver_m_01",
+      "site": "naver",
+      "command": "검색창에 '오늘 날씨' 입력해줘",
+      "expected_action": "input",
+      "predicted_action": "input",
+      "bbox": [
+        312,
+        205,
+        683,
+        260
+      ],
+      "target": "검색창",
+      "speech": "검색창에 '오늘 날씨'를 입력합니다.",
+      "raw_output": "{\"action\": \"input\", \"target\": \"검색창\", \"bbox\": [312, 205, 683, 260], \"speech\": \"검색창에 '오늘 날씨'를 입력합니다.\"}",
+      "elapsed_sec": 12.123693943023682,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "naver_m_02",
+      "site": "naver",
+      "command": "이 화면 어떻게 구성돼 있는지 설명해줘",
+      "expected_action": "explain",
+      "predicted_action": "explain",
+      "bbox": [
+        0,
+        0,
+        1000,
+        1000
+      ],
+      "target": "전체 화면",
+      "speech": "이 화면은 네이버 메인 페이지입니다. 상단에는 검색창과 메뉴 아이콘, 사용자 정보가 있습니다. 중앙에는 뉴스 기사와 광고가 배치되어 있으며, 오른쪽에는 사용자 계정 정보와 추가 정보가 표시됩니다. 하단에는 쇼핑 관련 정보가 있습니다.",
+      "raw_output": "{\"action\": \"explain\", \"target\": \"전체 화면\", \"bbox\": [0, 0, 1000, 1000], \"speech\": \"이 화면은 네이버 메인 페이지입니다. 상단에는 검색창과 메뉴 아이콘, 사용자 정보가 있습니다. 중앙에는 뉴스 기사와 광고가 배치되어 있으며, 오른쪽에는 사용자 계정 정보와 추가 정보가 표시됩니다. 하단에는 쇼핑 관련 정보가 있습니다.\"}",
+      "elapsed_sec": 17.89209818840027,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "naver_s_01",
+      "site": "naver",
+      "command": "검색어 입력창을 클릭해줘",
+      "expected_action": "click",
+      "predicted_action": "click",
+      "bbox": [
+        312,
+        213,
+        679,
+        258
+      ],
+      "target": "검색어 입력창",
+      "speech": "검색어 입력창을 클릭했습니다.",
+      "raw_output": "{\"action\": \"click\", \"target\": \"검색어 입력창\", \"bbox\": [312, 213, 679, 258], \"speech\": \"검색어 입력창을 클릭했습니다.\"}",
+      "elapsed_sec": 10.972261905670166,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "musinsa_m_01",
+      "site": "musinsa",
+      "command": "검색창 클릭해줘",
+      "expected_action": "click",
+      "predicted_action": "click",
+      "bbox": [
+        127,
+        219,
+        863,
+        254
+      ],
+      "target": "검색창",
+      "speech": "검색창을 클릭했습니다.",
+      "raw_output": "{\"action\": \"click\", \"target\": \"검색창\", \"bbox\": [127, 219, 863, 254], \"speech\": \"검색창을 클릭했습니다.\"}",
+      "elapsed_sec": 10.591877698898315,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "musinsa_d_01",
+      "site": "musinsa",
+      "command": "이 상품 페이지 설명해줘",
+      "expected_action": "explain",
+      "predicted_action": "explain",
+      "bbox": [
+        640,
+        183,
+        863,
+        999
+      ],
+      "target": "상품 설명 영역",
+      "speech": "이 상품은 삼양그룹의 '보통 티가 아니다 스페셜티' 티셔츠입니다. 가격은 19,900원이며, 오늘 22시까지 결제 시 내일(토) 도착보장 혜택이 있습니다. 첫 구매 시 20% 쿠폰도 제공됩니다. 사이즈 선택 후 구매하기 버튼을 클릭하면 주문이 가능합니다.",
+      "raw_output": "{\"action\": \"explain\", \"target\": \"상품 설명 영역\", \"bbox\": [640, 183, 863, 999], \"speech\": \"이 상품은 삼양그룹의 '보통 티가 아니다 스페셜티' 티셔츠입니다. 가격은 19,900원이며, 오늘 22시까지 결제 시 내일(토) 도착보장 혜택이 있습니다. 첫 구매 시 20% 쿠폰도 제공됩니다. 사이즈 선택 후 구매하기 버튼을 클릭하면 주문이 가능합니다.\"}",
+      "elapsed_sec": 20.660380363464355,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "musinsa_d_02",
+      "site": "musinsa",
+      "command": "아래로 스크롤해줘",
+      "expected_action": "scroll",
+      "predicted_action": "scroll",
+      "bbox": [
+        0,
+        0,
+        1000,
+        1000
+      ],
+      "target": "웹 페이지",
+      "speech": "아래로 스크롤해드릴게요.",
+      "raw_output": "{\"action\": \"scroll\", \"target\": \"웹 페이지\", \"bbox\": [0, 0, 1000, 1000], \"speech\": \"아래로 스크롤해드릴게요.\"}",
+      "elapsed_sec": 10.923258304595947,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "youtube_m_01",
+      "site": "youtube",
+      "command": "검색창에 '먹방' 입력해줘",
+      "expected_action": "input",
+      "predicted_action": "input",
+      "bbox": [
+        330,
+        127,
+        644,
+        162
+      ],
+      "target": "검색창",
+      "speech": "검색창에 '먹방'을 입력해드릴게요.",
+      "raw_output": "{\"action\": \"input\", \"target\": \"검색창\", \"bbox\": [330, 127, 644, 162], \"speech\": \"검색창에 '먹방'을 입력해드릴게요.\"}",
+      "elapsed_sec": 11.424976825714111,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "youtube_m_02",
+      "site": "youtube",
+      "command": "화면 설명해줘",
+      "expected_action": "explain",
+      "predicted_action": "explain",
+      "bbox": [
+        0,
+        0,
+        1000,
+        1000
+      ],
+      "target": "전체 화면",
+      "speech": "YouTube 메인 화면입니다. 검색창, 영상 추천, 채널 목록, 내 페이지 메뉴 등이 보입니다. 현재 화면에는 여러 영상이 표시되어 있으며, 각 영상의 제목과 조회수, 업로드 시간이 함께 표시되어 있습니다.",
+      "raw_output": "{\"action\": \"explain\", \"target\": \"전체 화면\", \"bbox\": [0, 0, 1000, 1000], \"speech\": \"YouTube 메인 화면입니다. 검색창, 영상 추천, 채널 목록, 내 페이지 메뉴 등이 보입니다. 현재 화면에는 여러 영상이 표시되어 있으며, 각 영상의 제목과 조회수, 업로드 시간이 함께 표시되어 있습니다.\"}",
+      "elapsed_sec": 16.794091939926147,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "youtube_c_01",
+      "site": "youtube",
+      "command": "아래로 스크롤해서 댓글 더 보기",
+      "expected_action": "scroll",
+      "predicted_action": "scroll",
+      "bbox": [
+        0,
+        218,
+        737,
+        972
+      ],
+      "target": "댓글 영역",
+      "speech": "댓글 영역을 아래로 스크롤합니다.",
+      "raw_output": "{\"action\": \"scroll\", \"target\": \"댓글 영역\", \"bbox\": [0, 218, 737, 972], \"speech\": \"댓글 영역을 아래로 스크롤합니다.\"}",
+      "elapsed_sec": 11.117767810821533,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    },
+    {
+      "id": "sheet_01",
+      "site": "spreadsheet",
+      "command": "이 스프레드시트 내용 설명해줘",
+      "expected_action": "explain",
+      "predicted_action": "explain",
+      "bbox": [
+        0,
+        0,
+        1000,
+        1000
+      ],
+      "target": "스프레드시트 내용",
+      "speech": "이 스프레드시트는 AI 관련 프로젝트 목록을 보여줍니다. 각 행은 순번, 전공, 분반, 대표교수, 조, 조장, 프로젝트명으로 구성되어 있으며, 다양한 AI 기반의 프로젝트들이 기술적으로 설명되어 있습니다.",
+      "raw_output": "{\"action\": \"explain\", \"target\": \"스프레드시트 내용\", \"bbox\": [0, 0, 1000, 1000], \"speech\": \"이 스프레드시트는 AI 관련 프로젝트 목록을 보여줍니다. 각 행은 순번, 전공, 분반, 대표교수, 조, 조장, 프로젝트명으로 구성되어 있으며, 다양한 AI 기반의 프로젝트들이 기술적으로 설명되어 있습니다.\"}",
+      "elapsed_sec": 17.305749893188477,
+      "action_correct": true,
+      "image_size": [
+        3840,
+        2100
+      ]
+    }
+  ]
+}

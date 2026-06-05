@@ -16,3 +16,15 @@ backend/temp/*
 # Mac/Windows
 .DS_Store
 Thumbs.db
+
+# Eval - screenshot images (크기 큼, JSON 결과만 커밋)
+eval/results/viz_*/
+taining_datasets/
+
+# Finetune - 수집된 스크린샷 이미지
+finetune/dataset/images/
+finetune/dataset/review_raw/
+finetune/dataset/review_fixed/
+finetune/dataset/review_omni/
+finetune/output/
+finetune/__pycache__/

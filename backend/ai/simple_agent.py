@@ -16,7 +16,7 @@ class OpenCUAgent:
     def __init__(self):
         if not USE_MOCK_AGENT:
             print("🧠 Vision Agent (Qwen2-VL + Action) 로딩 중...")
-            model_path = "Qwen/Qwen2-VL-7B-Instruct"
+            model_path = "/home/devlofi/models/Qwen2-VL-7B-Instruct"
 
             self.model = Qwen2VLForConditionalGeneration.from_pretrained(
                 model_path,
@@ -151,13 +151,10 @@ class OpenCUAgent:
         action_response = {"action": "none"}
         summary_response = output_text
 
-        # JSON 추출
-        json_pattern = r"``````"
-        json_match = re.search(json_pattern, output_text, re.DOTALL)
-
+        # JSON 추출: ```json {...} ``` 또는 bare {...}
+        json_match = re.search(r"```(?:json)?\s*(\{.*?\})\s*```", output_text, re.DOTALL)
         if not json_match:
-            json_pattern = r"(\{.*\})"
-            json_match = re.search(json_pattern, output_text, re.DOTALL)
+            json_match = re.search(r"(\{[^{}]*\})", output_text, re.DOTALL)
 
         if json_match:
             try:

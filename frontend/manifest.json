@@ -3,8 +3,8 @@
   "name": "VisionVoice MVP",
   "version": "1.0",
   "permissions": ["activeTab", "scripting", "desktopCapture"],
-  "host_permissions": ["http://localhost:8000/*", "https://3f6bd2949154.ngrok-free.app"],
-  "action": { "default_popup": "popup.html" },
+  "host_permissions": ["http://localhost:8000/*", "https://*.ngrok-free.app/*"],
+  "action": { "default_popup": "popup.html", "default_title": "VisionVoice 접근성 설정" },
   "background": { "service_worker": "background.js" },
   "content_scripts": [
     {
@@ -14,7 +14,7 @@
   ],
   "commands": {
     "toggle-recording": {
-      "suggested_key": { "default": "Ctrl+Shift+S" },
+      "suggested_key": { "default": "Ctrl+Shift+S", "mac": "Command+Shift+S" },
       "description": "Start/Stop Recording"
     }
   }

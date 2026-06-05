@@ -3,6 +3,91 @@
 let mediaRecorder;
 let audioChunks = [];
 
+// ── 접근성 모드 상태 ──
+const vvA11y = { zoom: 100, filter: null };
+
+const A11Y_FILTERS = {
+  high_contrast: "contrast(250%) brightness(110%)",
+  grayscale:     "grayscale(100%)",
+  dark_mode:     "invert(100%) hue-rotate(180deg)",
+};
+
+const A11Y_NAMES = {
+  high_contrast: "고대비 모드",
+  grayscale:     "흑백 모드 (색맹)",
+  dark_mode:     "다크 모드",
+};
+
+function applyA11yZoom(level) {
+  vvA11y.zoom = level;
+  document.documentElement.style.zoom = level === 100 ? "" : `${level}%`;
+  showA11yToast(level === 100 ? "확대 해제" : `화면 ${level}% 확대`);
+}
+
+function applyA11yFilter(mode) {
+  if (vvA11y.filter === mode) {
+    vvA11y.filter = null;
+    document.documentElement.style.filter = "";
+    showA11yToast("필터 해제");
+  } else {
+    vvA11y.filter = mode;
+    document.documentElement.style.filter = A11Y_FILTERS[mode];
+    showA11yToast(A11Y_NAMES[mode] + " 켜짐");
+  }
+}
+
+function resetA11y() {
+  vvA11y.zoom = 100;
+  vvA11y.filter = null;
+  document.documentElement.style.zoom = "";
+  document.documentElement.style.filter = "";
+  // 포커스 하이라이트 제거
+  const old = document.getElementById("vv-focus-style");
+  if (old) old.remove();
+  showA11yToast("접근성 설정 초기화");
+}
+
+function toggleFocusHighlight() {
+  const existing = document.getElementById("vv-focus-style");
+  if (existing) {
+    existing.remove();
+    showA11yToast("포커스 하이라이트 해제");
+  } else {
+    const style = document.createElement("style");
+    style.id = "vv-focus-style";
+    style.textContent = `
+      *:focus, *:hover {
+        outline: 4px solid #facc15 !important;
+        outline-offset: 2px !important;
+        background-color: rgba(250, 204, 21, 0.15) !important;
+      }`;
+    document.head.appendChild(style);
+    showA11yToast("포커스 하이라이트 켜짐");
+  }
+}
+
+function showA11yToast(msg) {
+  let toast = document.getElementById("vv-a11y-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "vv-a11y-toast";
+    Object.assign(toast.style, {
+      position: "fixed", bottom: "24px", right: "24px",
+      background: "#1e40af", color: "white",
+      padding: "12px 18px", borderRadius: "10px",
+      fontSize: "15px", fontWeight: "bold",
+      zIndex: "2147483647", pointerEvents: "none",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+      transition: "opacity 0.4s",
+    });
+    document.body.appendChild(toast);
+  }
+  toast.textContent = "♿ " + msg;
+  toast.style.opacity = "1";
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { toast.style.opacity = "0"; }, 2500);
+}
+
 // 1. 모든 프레임 텍스트 재귀 추출
 function getAllVisibleText(win = window) {
   let text = "";
@@ -54,6 +139,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else {
       startRecording();
     }
+  }
+
+  // 팝업 / 음성명령 → 접근성 모드 제어
+  if (request.action === "accessibility") {
+    const mode = request.mode;
+    if (mode === "zoom_150")      applyA11yZoom(150);
+    else if (mode === "zoom_200") applyA11yZoom(200);
+    else if (mode === "zoom_100") applyA11yZoom(100);
+    else if (mode === "high_contrast" || mode === "grayscale" || mode === "dark_mode")
+      applyA11yFilter(mode);
+    else if (mode === "highlight") toggleFocusHighlight();
+    else if (mode === "reset")    resetA11y();
+    // 현재 상태 반환 (팝업 UI 동기화용)
+    sendResponse({ zoom: vvA11y.zoom, filter: vvA11y.filter });
+  }
+
+  if (request.action === "get_a11y_state") {
+    sendResponse({ zoom: vvA11y.zoom, filter: vvA11y.filter,
+                   highlight: !!document.getElementById("vv-focus-style") });
   }
 });
 
@@ -115,7 +219,7 @@ async function processRequest(audioBlob, screenshotDataUrl) {
 
   try {
     // const SERVER_URL = "http://localhost:8000";
-    const SERVER_URL = "https://3f6bd2949154.ngrok-free.app";
+    const SERVER_URL = "https://d30c-210-119-237-104.ngrok-free.app";
 
     console.log("🚀 서버로 전송 중...");
     const response = await fetch(`${SERVER_URL}/process`, {
@@ -221,6 +325,16 @@ async function processRequest(audioBlob, screenshotDataUrl) {
         );
         if (target) target.click();
         else console.warn("❌ 이동 대상 링크를 찾을 수 없습니다.");
+      } else if (act === "accessibility") {
+        // 음성 명령 → 접근성 모드 (서버가 mode 필드 반환)
+        const mode = data.action.mode || "";
+        if (mode === "zoom_150")      applyA11yZoom(150);
+        else if (mode === "zoom_200") applyA11yZoom(200);
+        else if (mode === "zoom_100") applyA11yZoom(100);
+        else if (["high_contrast","grayscale","dark_mode"].includes(mode))
+          applyA11yFilter(mode);
+        else if (mode === "highlight") toggleFocusHighlight();
+        else if (mode === "reset")     resetA11y();
       } else if (act === "close") {
         console.log(`❌ 팝업 닫기 시도: ${data.action.target}`);
         const candidates = Array.from(
