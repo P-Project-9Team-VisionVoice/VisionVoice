@@ -9,7 +9,7 @@ from pydub import AudioSegment
 
 from faster_whisper import WhisperModel
 
-COLAB_URL = "https://a1fa8048363b.ngrok-free.app/infer" 
+COLAB_URL = "https://be79bb94a356.ngrok-free.app/infer" 
 
 # 디버깅 파일 저장 경로
 TEMP_DIR = "temp"
@@ -45,12 +45,12 @@ def get_session():
 def perform_stt(audio_path):
     """로컬 Whisper 모델을 사용하여 음성을 텍스트로 변환"""
     try:
-        # 1. WebM -> Wav 변환
+        # 1. WebM -> Wav 변환 (Whisper는 Wav 선호)
         sound = AudioSegment.from_file(audio_path)
         wav_path = audio_path.replace(".webm", ".wav")
         sound.export(wav_path, format="wav")
 
-        # 2. 로컬 모델로 추론
+        # 2. 로컬 모델로 추론 (인터넷 X)
         segments, _ = stt_model.transcribe(wav_path, language="ko")
         
         # 3. 결과 합치기
@@ -66,7 +66,7 @@ async def process(
     screenshot: UploadFile = File(...),
     dom: str = Form(...)
 ):
-    # 1. 타임스탬프 생성
+    # 1. 타임스탬프 생성 (디버깅용)
     now = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
     print(f"\n🚀 [New Request] {now} ------------------")
 
@@ -74,7 +74,7 @@ async def process(
     audio_bytes = await audio.read()
     screenshot_bytes = await screenshot.read()
     
-    # 3. 로컬 파일 저장
+    # 3. 로컬 파일 저장 (기존 디버깅 기능 유지)
     audio_filename = f"{TEMP_DIR}/{now}_audio.webm"
     image_filename = f"{TEMP_DIR}/{now}_screenshot.png"
     dom_filename = f"{TEMP_DIR}/{now}_dom.txt"
