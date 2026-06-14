@@ -44,7 +44,7 @@ def _iou(box_a, box_b):
 
 
 def refine_bbox(image_path: str, vlm_box_norm: list, orig_w: int, orig_h: int,
-                iou_threshold: float = 0.05) -> dict:
+                iou_threshold: float = 0.15) -> dict:
     """
     VLM bbox를 OmniParser로 정밀화.
 

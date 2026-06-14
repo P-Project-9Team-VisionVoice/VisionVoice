@@ -9,17 +9,17 @@ from typing import Any
 from .omniparser_grounding import refine_bbox
 
 if not USE_MOCK_AGENT:
-    from transformers import Qwen2VLForConditionalGeneration, AutoProcessor
+    from transformers import Qwen3VLForConditionalGeneration, AutoProcessor
     from qwen_vl_utils import process_vision_info
 
 
 class OpenCUAgent:
     def __init__(self):
         if not USE_MOCK_AGENT:
-            print("🧠 Vision Agent (Qwen2-VL + Action) 로딩 중...")
-            model_path = "/home/devlofi/models/Qwen2-VL-7B-Instruct"
+            print("🧠 Vision Agent (Qwen3-VL-8B) 로딩 중...")
+            model_path = "/home/devlofi/models/Qwen3-VL-8B-Instruct"
 
-            self.model = Qwen2VLForConditionalGeneration.from_pretrained(
+            self.model = Qwen3VLForConditionalGeneration.from_pretrained(
                 model_path,
                 torch_dtype=torch.bfloat16,
                 device_map="auto",
@@ -33,7 +33,7 @@ class OpenCUAgent:
         else:
             print("🧠 OpenCUA Mock 모드 대기 중")
 
-    def inference(self, image_path, command, dom_text):
+    def inference(self, image_path, command, dom_text, dom_elements="[]"):
         if USE_MOCK_AGENT:
             return {"action": "none"}, "테스트 완료"
 
@@ -52,16 +52,21 @@ class OpenCUAgent:
             "당신은 시각장애인을 돕는 웹 브라우저 제어 AI입니다. "
             "사용자의 명령을 분석하여 행동(Action)과 답변(Response)을 생성하세요.\n\n"
             "[지원되는 액션 타입]\n"
-            "- click: 특정 버튼/링크를 클릭합니다.\n"
-            "  예: {\"type\": \"action\", \"name\": \"click\", \"target_name\": \"사이즈 버튼\", \"box_2d\": [ymin, xmin, ymax, xmax]}\n"
+            "- click: 특정 버튼/링크를 클릭합니다. DOM 요소 목록에서 일치하는 selector가 있으면 css_selector도 함께 출력하세요.\n"
+            "  예: {\"type\": \"action\", \"name\": \"click\", \"target_name\": \"사이즈 버튼\", \"box_2d\": [ymin, xmin, ymax, xmax], \"css_selector\": \"#size-btn\"}\n"
             "- scroll: 화면을 위/아래로 스크롤합니다.\n"
             "  예: {\"type\": \"action\", \"name\": \"scroll\", \"direction\": \"down\", \"amount\": 300}\n"
-            "- input: 입력창에 텍스트를 입력합니다.\n"
-            "  예: {\"type\": \"action\", \"name\": \"input\", \"target_name\": \"검색창\", \"text\": \"패딩\"}\n"
+            "- input: 입력창을 클릭한 뒤 텍스트를 입력합니다. '검색해줘' 처럼 제출까지 원하면 submit을 true로 설정하세요.\n"
+            "  예(입력만): {\"type\": \"action\", \"name\": \"input\", \"target_name\": \"검색창\", \"box_2d\": [ymin, xmin, ymax, xmax], \"text\": \"패딩\", \"submit\": false}\n"
+            "  예(입력+검색): {\"type\": \"action\", \"name\": \"input\", \"target_name\": \"검색창\", \"box_2d\": [ymin, xmin, ymax, xmax], \"text\": \"패딩\", \"submit\": true}\n"
             "- navigate: 링크나 버튼을 눌러 다른 페이지로 이동합니다.\n"
             "  예: {\"type\": \"action\", \"name\": \"navigate\", \"target_name\": \"장바구니 페이지\"}\n"
             "- close: 팝업이나 알림창을 닫습니다.\n"
-            "  예: {\"type\": \"action\", \"name\": \"close\", \"target_name\": \"팝업 닫기 버튼\"}\n\n"
+            "  예: {\"type\": \"action\", \"name\": \"close\", \"target_name\": \"팝업 닫기 버튼\"}\n"
+            "- accessibility: 접근성 설정을 변경합니다 (고대비/확대/다크모드 등).\n"
+            "  예: {\"type\": \"action\", \"name\": \"accessibility\", \"mode\": \"high_contrast\"}\n"
+            "  mode 값: high_contrast(고대비), grayscale(흑백/색맹), dark_mode(다크모드), "
+            "zoom_150(150%확대), zoom_200(200%확대), zoom_100(기본크기), highlight(포커스하이라이트), reset(초기화)\n\n"
             "[필수 출력 규칙]\n"
             "1. 사용자 명령에 '클릭', '눌러', '선택해', '스크롤', '내려줘', '올려줘', '입력해', '검색해', '이동해', '닫아줘' 같은 단어가 하나라도 있으면,\n"
             "   반드시 위 액션 타입 중 하나를 선택해 JSON을 출력해야 합니다.\n"
@@ -77,8 +82,10 @@ class OpenCUAgent:
                 "type": "text",
                 "text": (
                     f"[웹 페이지 텍스트]\n{safe_dom}\n\n"
+                    f"[클릭 가능한 DOM 요소 목록 (CSS 셀렉터 포함)]\n{dom_elements[:2000]}\n\n"
                     f"[사용자 명령]\n\"{command}\"\n\n"
-                    "위 정보를 참고해서 사용자의 명령을 수행하거나 화면을 설명해 주세요."
+                    "위 정보를 참고해서 사용자의 명령을 수행하거나 화면을 설명해 주세요. "
+                    "클릭 대상이 DOM 요소 목록에 있으면 해당 css_selector를 JSON에 포함하세요."
                 ),
             },
         ]
@@ -168,7 +175,8 @@ class OpenCUAgent:
                     summary_response.replace("``````", "").strip()
                 )
                 if not summary_response:
-                    summary_response = f"{data.get('target_name')} 요소를 클릭합니다."
+                    target = data.get("target_name") or data.get("name") or "요청"
+                    summary_response = f"{target}을(를) 수행합니다."
 
                 if data.get("type") == "action":
                     name = data.get("name")
@@ -193,6 +201,8 @@ class OpenCUAgent:
                                 "action": "click",
                                 "x_raw": abs_x,
                                 "y_raw": abs_y,
+                                "box_px": refined.get("box_px"),
+                                "css_selector": data.get("css_selector"),
                                 "target": data.get("target_name", "타겟"),
                                 "type": "absolute",
                                 "grounding": grounding_source,
@@ -215,10 +225,26 @@ class OpenCUAgent:
                         }
 
                     elif name == "input":
+                        box = data.get("box_2d")
+                        x_raw, y_raw, grounding_src = None, None, None
+                        if box and len(box) == 4:
+                            refined = refine_bbox(
+                                image_path=image_path,
+                                vlm_box_norm=box,
+                                orig_w=orig_w,
+                                orig_h=orig_h,
+                            )
+                            x_raw = refined["x"]
+                            y_raw = refined["y"]
+                            grounding_src = refined["source"]
+                            print(f"📐 Input Grounding ({grounding_src}): ({x_raw},{y_raw})")
                         action_response = {
                             "action": "input",
                             "target": data.get("target_name", "입력창"),
                             "text": data.get("text", ""),
+                            "submit": bool(data.get("submit", False)),
+                            "x_raw": x_raw,
+                            "y_raw": y_raw,
                         }
 
                     elif name == "navigate":
