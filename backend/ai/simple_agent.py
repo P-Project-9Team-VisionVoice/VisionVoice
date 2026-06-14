@@ -6,6 +6,7 @@ import json
 import re
 from PIL import Image
 from typing import Any
+from .omniparser_grounding import refine_bbox
 
 if not USE_MOCK_AGENT:
     from transformers import Qwen2VLForConditionalGeneration, AutoProcessor
@@ -175,12 +176,18 @@ class OpenCUAgent:
                     if name == "click":
                         box = data.get("box_2d")
                         if box and len(box) == 4:
-                            cx_1000 = (box[1] + box[3]) / 2
-                            cy_1000 = (box[0] + box[2]) / 2
-                            abs_x = int((cx_1000 / 1000) * orig_w)
-                            abs_y = int((cy_1000 / 1000) * orig_h)
+                            # Hybrid Grounding v2: VLM bbox → OmniParser 정밀화
+                            refined = refine_bbox(
+                                image_path=image_path,
+                                vlm_box_norm=box,   # [y1, x1, y2, x2] 0~1000
+                                orig_w=orig_w,
+                                orig_h=orig_h,
+                            )
+                            abs_x = refined["x"]
+                            abs_y = refined["y"]
+                            grounding_source = refined["source"]
                             print(
-                                f"📐 좌표 변환: {cx_1000:.1f},{cy_1000:.1f} (1000분율) -> {abs_x},{abs_y}"
+                                f"📐 Hybrid Grounding v2 ({grounding_source}): ({abs_x},{abs_y})"
                             )
                             action_response = {
                                 "action": "click",
@@ -188,6 +195,7 @@ class OpenCUAgent:
                                 "y_raw": abs_y,
                                 "target": data.get("target_name", "타겟"),
                                 "type": "absolute",
+                                "grounding": grounding_source,
                             }
                         else:
                             # 좌표가 없으면 타겟 이름 기반 클릭으로 fallback
