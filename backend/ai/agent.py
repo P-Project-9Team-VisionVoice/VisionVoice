@@ -32,7 +32,7 @@ class OpenCUAgent:
         if not USE_MOCK_AGENT:
             print("🧠 OpenCUA-7B 모델 로딩 중... (ARM64 최적화: SDPA 가속 ⚡️)")
 
-            model_path = "xlangai/OpenCUA-7B"
+            model_path = "/home/devlofi/models/OpenCUA-7B"
 
             # 2. 토크나이저
             self.tokenizer = AutoTokenizer.from_pretrained(

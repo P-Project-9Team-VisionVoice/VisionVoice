@@ -37,6 +37,7 @@ async def process(
     audio: UploadFile = File(...),
     screenshot: UploadFile = File(...),
     dom: str = Form(""),
+    dom_elements: str = Form("[]"),
 ):
     print("🚀 요청 수신!")
 
@@ -67,7 +68,7 @@ async def process(
         # (2) OpenCUA
         # dom이 비어있으면 기본 텍스트 전달
         safe_dom = dom if dom else "웹 페이지 텍스트 정보 없음"
-        action, summary = agent_module.inference(image_path, command, safe_dom)
+        action, summary = agent_module.inference(image_path, command, safe_dom, dom_elements)
         print(f"AI Action: {action}, Summary: {summary}")
 
         # (3) TTS
@@ -90,4 +91,15 @@ async def process(
         import traceback
         traceback.print_exc()
         return {"action": {"action": "none"}, "summary": "처리 중 오류가 발생했습니다.", "audio_base64": None}
+
+
+@app.post("/speak")
+async def speak(text: str = Form(...)):
+    """UI 안내 메시지를 SunHiNeural TTS로 변환"""
+    import base64, time
+    tts_path = f"{TEMP_DIR}/speak_{int(time.time()*1000) % 100000}.mp3"
+    await tts_module.generate_audio(text, tts_path)
+    with open(tts_path, "rb") as f:
+        audio_b64 = base64.b64encode(f.read()).decode("utf-8")
+    return {"audio_base64": audio_b64}
 

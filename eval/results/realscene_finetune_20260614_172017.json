@@ -1,0 +1,178 @@
+{
+  "date": "20260614_172017",
+  "model": "Qwen3-VL-8B-LoRA",
+  "eval_type": "realscene",
+  "hardware": "DGX Spark GB10",
+  "total_scenarios": 10,
+  "correct": 6,
+  "accuracy": 0.6,
+  "avg_latency_sec": 13.851958179473877,
+  "site_stats": {
+    "naver": {
+      "correct": 3,
+      "total": 3
+    },
+    "musinsa": {
+      "correct": 1,
+      "total": 3
+    },
+    "youtube": {
+      "correct": 2,
+      "total": 3
+    },
+    "sheet": {
+      "correct": 0,
+      "total": 1
+    }
+  },
+  "results": [
+    {
+      "id": "naver_m_01",
+      "site": "naver",
+      "command": "검색창에 '오늘 날씨' 입력해줘",
+      "expected_action": "input",
+      "predicted_action": "input",
+      "bbox": [
+        312,
+        205,
+        680,
+        258
+      ],
+      "target": "검색창",
+      "speech": "'오늘 날씨' 입력하겠습니다.",
+      "latency": 25.315266847610474,
+      "correct": true,
+      "raw_output": "{\"action\": \"input\", \"target\": \"검색창\", \"bbox\": [312, 205, 680, 258], \"speech\": \"'오늘 날씨' 입력하겠습니다.\"}"
+    },
+    {
+      "id": "naver_m_02",
+      "site": "naver",
+      "command": "이 화면 어떻게 구성돼 있는지 설명해줘",
+      "expected_action": "explain",
+      "predicted_action": "explain",
+      "bbox": [
+        0,
+        0,
+        1000,
+        1000
+      ],
+      "target": "전체 화면",
+      "speech": "화면을 분석하겠습니다.",
+      "latency": 18.823128700256348,
+      "correct": true,
+      "raw_output": "{\"action\": \"explain\", \"target\": \"전체 화면\", \"bbox\": [0, 0, 1000, 1000], \"speech\": \"화면을 분석하겠습니다.\"}"
+    },
+    {
+      "id": "naver_s_01",
+      "site": "naver",
+      "command": "검색어 입력창을 클릭해줘",
+      "expected_action": "click",
+      "predicted_action": "click",
+      "bbox": [
+        316,
+        210,
+        679,
+        260
+      ],
+      "target": "검색어 입력창",
+      "speech": "'검색어를 입력해 주세요.' 입력창을 클릭하겠습니다.",
+      "latency": 24.95711851119995,
+      "correct": true,
+      "raw_output": "{\"action\": \"click\", \"target\": \"검색어 입력창\", \"bbox\": [316, 210, 679, 260], \"speech\": \"'검색어를 입력해 주세요.' 입력창을 클릭하겠습니다.\"}"
+    },
+    {
+      "id": "musinsa_m_01",
+      "site": "musinsa",
+      "command": "검색 아이콘 눌러줘",
+      "expected_action": "click",
+      "predicted_action": "click",
+      "bbox": [
+        681,
+        135,
+        689,
+        150
+      ],
+      "target": "검색 아이콘",
+      "speech": "'검색 아이콘'을(를) 클릭하겠습니다.",
+      "latency": 25.420866012573242,
+      "correct": true,
+      "raw_output": "{\"action\": \"click\", \"target\": \"검색 아이콘\", \"bbox\": [681, 135, 689, 150], \"speech\": \"'검색 아이콘'을(를) 클릭하겠습니다.\"}"
+    },
+    {
+      "id": "musinsa_d_01",
+      "image": "musinsa_detail.png",
+      "command": "장바구니에 담기 버튼 눌러줘",
+      "expected": "click",
+      "site": "musinsa",
+      "predicted_action": "N/A",
+      "correct": false,
+      "latency": 0
+    },
+    {
+      "id": "musinsa_d_02",
+      "image": "musinsa_detail.png",
+      "command": "아래로 스크롤 해줘",
+      "expected": "scroll",
+      "site": "musinsa",
+      "predicted_action": "N/A",
+      "correct": false,
+      "latency": 0
+    },
+    {
+      "id": "youtube_m_01",
+      "site": "youtube",
+      "command": "홈 가줘",
+      "expected_action": "click",
+      "predicted_action": "click",
+      "bbox": [
+        10,
+        180,
+        114,
+        218
+      ],
+      "target": "홈",
+      "speech": "'홈'을(를) 클릭하겠습니다.",
+      "latency": 23.256774187088013,
+      "correct": true,
+      "raw_output": "{\"action\": \"click\", \"target\": \"홈\", \"bbox\": [10, 180, 114, 218], \"speech\": \"'홈'을(를) 클릭하겠습니다.\"}"
+    },
+    {
+      "id": "youtube_m_02",
+      "site": "youtube",
+      "command": "검색창 눌러줘",
+      "expected_action": "click",
+      "predicted_action": "click",
+      "bbox": [
+        330,
+        125,
+        598,
+        161
+      ],
+      "target": "검색창",
+      "speech": "'검색창'을(를) 클릭하겠습니다.",
+      "latency": 20.746427536010742,
+      "correct": true,
+      "raw_output": "{\"action\": \"click\", \"target\": \"검색창\", \"bbox\": [330, 125, 598, 161], \"speech\": \"'검색창'을(를) 클릭하겠습니다.\"}"
+    },
+    {
+      "id": "youtube_c_01",
+      "image": "youtube_comment.png",
+      "command": "댓글 달기 클릭해줘",
+      "expected": "click",
+      "site": "youtube",
+      "predicted_action": "N/A",
+      "correct": false,
+      "latency": 0
+    },
+    {
+      "id": "sheet_01",
+      "image": "spreadsheet_main.png",
+      "command": "A1 셀 클릭해줘",
+      "expected": "click",
+      "site": "sheet",
+      "predicted_action": "N/A",
+      "correct": false,
+      "latency": 0
+    }
+  ]
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>VisionVoice</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 280px;
+      font-family: -apple-system, "Malgun Gothic", sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e40af, #4f46e5);
+      padding: 14px 16px 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .header .logo { font-size: 22px; }
+    .header h1 { font-size: 16px; font-weight: 700; }
+    .header p  { font-size: 11px; color: #bfdbfe; margin-top: 2px; }
+
+    .section { padding: 12px 14px 4px; }
+    .section-title {
+      font-size: 10px; font-weight: 600; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: .6px;
+      margin-bottom: 8px;
+    }
+
+    .btn-row { display: flex; gap: 6px; margin-bottom: 6px; }
+
+    button {
+      flex: 1;
+      padding: 8px 4px;
+      border: 1.5px solid #334155;
+      border-radius: 8px;
+      background: #1e293b;
+      color: #e2e8f0;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .15s;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 3px;
+    }
+    button .icon { font-size: 18px; }
+    button:hover  { background: #334155; border-color: #60a5fa; }
+    button.active { background: #1d4ed8; border-color: #60a5fa; color: #fff; }
+
+    .btn-reset {
+      width: 100%; margin: 4px 0 8px;
+      padding: 9px;
+      background: #1e293b; border: 1.5px solid #334155;
+      border-radius: 8px; color: #94a3b8;
+      font-size: 12px; cursor: pointer;
+      transition: all .15s;
+    }
+    .btn-reset:hover { background: #374151; color: #f1f5f9; }
+
+    .divider { height: 1px; background: #1e293b; margin: 4px 0; }
+
+    .shortcut-tip {
+      padding: 8px 14px 12px;
+      font-size: 11px; color: #64748b;
+    }
+    .shortcut-tip kbd {
+      background: #1e293b; border: 1px solid #334155;
+      border-radius: 4px; padding: 1px 5px;
+      font-size: 10px; color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <span class="logo">👁️</span>
+  <div>
+    <h1>VisionVoice</h1>
+    <p>시각장애인용 AI 웹 에이전트</p>
+  </div>
+</div>
+
+<!-- 확대 -->
+<div class="section">
+  <div class="section-title">확대</div>
+  <div class="btn-row">
+    <button id="btn-zoom100">
+      <span class="icon">🔍</span>100%
+    </button>
+    <button id="btn-zoom150">
+      <span class="icon">🔎</span>150%
+    </button>
+    <button id="btn-zoom200">
+      <span class="icon">🔎</span>200%
+    </button>
+  </div>
+</div>
+
+<!-- 색상 필터 -->
+<div class="section">
+  <div class="section-title">색상 / 시각 보조</div>
+  <div class="btn-row">
+    <button id="btn-high_contrast">
+      <span class="icon">☀️</span>고대비
+    </button>
+    <button id="btn-grayscale">
+      <span class="icon">⚫</span>흑백
+    </button>
+    <button id="btn-dark_mode">
+      <span class="icon">🌙</span>다크
+    </button>
+  </div>
+</div>
+
+<!-- 포커스 하이라이트 -->
+<div class="section">
+  <div class="section-title">포커스 하이라이트</div>
+  <div class="btn-row">
+    <button id="btn-highlight">
+      <span class="icon">✨</span>클릭 가능 요소 강조
+    </button>
+  </div>
+</div>
+
+<div class="section">
+  <button class="btn-reset" id="btn-reset">↺ 모든 설정 초기화</button>
+</div>
+
+<div class="divider"></div>
+<div class="shortcut-tip">
+  음성 녹음: <kbd>Ctrl+Shift+S</kbd>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

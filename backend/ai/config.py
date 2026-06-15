@@ -9,4 +9,4 @@
 
 USE_MOCK_STT = False
 USE_MOCK_AGENT = False
-USE_MOCK_TTS = True
+USE_MOCK_TTS = False

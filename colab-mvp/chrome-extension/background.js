@@ -23,7 +23,6 @@ function dataURLtoBlob(dataURL) {
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    // 1. 기존 스크린샷 캡처 요청
     if (request.type === "CAPTURE_SCREENSHOT") {
         chrome.tabs.captureVisibleTab(null, { format: "png" }, (dataUrl) => {
             sendResponse(dataUrl);
@@ -31,13 +30,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
     }
 
-    // 2. AI 처리 요청
     if (request.type === "PROCESS_AI_REQUEST") {
         const { audioBase64, dom } = request.payload;
 
-        // 비동기 처리를 위해 즉시 return true 하고 내부에서 async 실행
         (async () => {
             try {
+                const startTime = Date.now();
+                console.log("⏱️ Start processing: ", startTime);
+
                 // 1) 스크린샷 캡처
                 const screenshotDataUrl = await chrome.tabs.captureVisibleTab(null, { format: "png" });
 
@@ -68,10 +68,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     throw new Error(`Server error: ${res.status}`);
                 }
 
-                // 1. 일단 받습니다.
                 let result = await res.json();
 
-                // ⭐ [핵심 수정] result가 객체가 아니라 '문자열'로 왔다면, 강제로 객체로 만듭니다!
+                const endTime = Date.now();
+                const latency = (endTime - startTime) / 1000;
+                console.log(`⏱️ Total Latency: ${latency}s`);
+
+                // result가 객체가 아니라 '문자열'로 왔을경우, 강제로 객체로 만듦
                 if (typeof result === "string") {
                     console.log("⚠️ 결과가 문자열입니다. JSON 파싱을 시도합니다.");
                     const cleanJson = result.replace(/```json|```/g, "").trim();
@@ -84,7 +87,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                 console.log("✅ Final Object:", result);
 
-                // 🔊 TTS 실행
+                // TTS
                 if (result.speech) {
                     chrome.tts.stop();
                     setTimeout(() => {
@@ -96,7 +99,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     }, 100);
                 }
 
-                // 5) 결과를 content script로 반환
                 sendResponse(result);
 
             } catch (error) {
@@ -111,7 +113,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
     }
 
-    // 3. 액션 결과 TTS 요청 (content.js에서 보낸 성공/실패 메시지 읽기)
+    // 액션 결과 TTS 요청 (content.js에서 보낸 성공/실패 메시지 읽기)
     if (request.type === "SPEAK_RESULT") {
         const message = request.text;
         chrome.tts.speak(message, {

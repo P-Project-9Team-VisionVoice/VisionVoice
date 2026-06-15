@@ -10,8 +10,7 @@ class TTSModule:
             return
 
         try:
-            short_text = text[:100] if len(text) > 100 else text
-            communicate = edge_tts.Communicate(short_text, "ko-KR-SunHiNeural")
+            communicate = edge_tts.Communicate(text, "ko-KR-SunHiNeural")
             await communicate.save(output_path)
             print(f"✅ TTS 생성: {output_path}")
         except Exception as e:
