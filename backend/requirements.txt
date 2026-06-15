@@ -1,0 +1,14 @@
+# backend/requirements.txt
+fastapi
+uvicorn
+python-multipart
+requests
+transformers==4.45.2
+accelerate==0.33.0
+qwen-vl-utils
+pillow
+numpy==1.26.4
+faster-whisper
+edge-tts
+
+# torch는 로컬 환경에 맞춰서 각자 설치 권장

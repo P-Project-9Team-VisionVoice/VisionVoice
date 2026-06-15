@@ -1,0 +1,15 @@
+torch
+transformers
+accelerate
+bitsandbytes
+fastapi
+uvicorn
+pillow
+pydantic
+pyngrok
+fastapi
+uvicorn
+requests
+pydub
+faster-whisper
+python-multipart

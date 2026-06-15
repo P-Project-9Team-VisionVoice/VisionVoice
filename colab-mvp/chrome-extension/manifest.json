@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "VisionVoice MVP",
+  "version": "1.0",
+  "permissions": [
+    "activeTab",
+    "commands",
+    "microphone",
+    "tts"
+  ]
+  ,
+  "host_permissions": ["http://localhost:8000/*", "http://127.0.0.1:8000/*", "https://1ee624642065.ngrok-free.app/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["content.js"]
+  }],
+  "commands": {
+    "toggle-recording": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+S"
+      },
+      "description": "VisionVoice 실행"
+    }
+  }
+}
+
