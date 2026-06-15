@@ -63,6 +63,8 @@
   └─ 웹 인터랙션 실행 (click / input / scroll / back / accessibility)
 ```
 
+<img width="2400" height="1270" alt="image" src="https://github.com/user-attachments/assets/da20d470-c124-48f9-94a8-b5c1f2387f86" />
+
 ---
 
 ## 📁 프로젝트 구조
@@ -208,6 +210,10 @@ const SERVER_URL = "https://xxxx.ngrok-free.app";
 | `⌘+Shift+Y` (Mac) | 접근성 패널 토글 |
 
 패널에서 **고대비 / 흑백 / 다크모드 / 화면 확대(110~150%) / 하이라이팅 / 초기화** 를 즉시 적용할 수 있습니다.
+
+<p align="center">
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/4683bbc9-6e7b-4060-a73e-0b5eb7964a92" />
+</p>
 
 ---
 
