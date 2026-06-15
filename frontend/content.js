@@ -1,6 +1,11 @@
 // frontend/content.js
 
-const SERVER_URL = "https://9054-210-119-237-104.ngrok-free.app";
+let SERVER_URL = "https://9054-210-119-237-104.ngrok-free.app";
+// ngrok URL이 재시작마다 바뀌므로 chrome.storage에서 동적으로 읽기
+// 팝업 UI 또는 popup.js에서 chrome.storage.local.set({ vv_server_url: "..." }) 으로 변경 가능
+chrome.storage.local.get(["vv_server_url"], (r) => {
+  if (r.vv_server_url) SERVER_URL = r.vv_server_url;
+});
 
 let mediaRecorder;
 let audioChunks = [];
@@ -88,6 +93,23 @@ function showA11yToast(msg) {
   toast.style.opacity = "1";
   clearTimeout(toast._t);
   toast._t = setTimeout(() => { toast.style.opacity = "0"; }, 2500);
+}
+
+// 1-0. 현재 viewport에 보이는 텍스트만 추출 (LLM 관련성 높음)
+function getViewportText() {
+  const vh = window.innerHeight, vw = window.innerWidth;
+  const seen = new Set();
+  return [...document.querySelectorAll("*")]
+    .filter(el => {
+      if (el.children.length > 0) return false;
+      const r = el.getBoundingClientRect();
+      return r.top >= -10 && r.bottom <= vh + 10 &&
+             r.left >= -10 && r.right <= vw + 10 &&
+             r.width > 0 && r.height > 0;
+    })
+    .map(el => (el.innerText || el.textContent || "").trim())
+    .filter(t => { if (!t || seen.has(t)) return false; seen.add(t); return true; })
+    .join("\n");
 }
 
 // 1. 모든 프레임 텍스트 재귀 추출
@@ -178,9 +200,8 @@ function isVisible(el) {
 
 // 3-2. 타겟 이름(텍스트)으로 클릭 가능한 요소 찾기
 //      Qwen2-VL의 좌표/셀렉터가 부정확해도 "농구","e스포츠" 같은 이름은 정확하므로 가장 신뢰도 높음
-function findByText(name) {
+function findByText(name, boxPxCss = null) {
   const norm = (t) => (t || "").replace(/\s+/g, "").toLowerCase();
-  // "스포츠 탭" → "스포츠", "장바구니 버튼" → "장바구니" 처럼 흔한 접미사 제거
   const want = norm(name).replace(/(탭|버튼|메뉴|링크|아이콘|이미지)$/g, "");
   if (!want || want.length < 1) return null;
 
@@ -188,18 +209,32 @@ function findByText(name) {
     "a, button, [role='button'], [role='link'], [role='menuitem'], [role='tab'], input[type='submit'], input[type='button']"
   )].filter(isVisible);
 
-  const label = (el) => norm(el.innerText || el.textContent || el.value || el.getAttribute("aria-label"));
+  const label = (el) => norm(
+    el.innerText || el.textContent || el.value ||
+    el.getAttribute("aria-label") || el.getAttribute("title") ||
+    el.querySelector("img")?.getAttribute("alt") || ""
+  );
 
-  // 1) 정확히 일치 — 가장 짧은(가장 구체적인) 요소 우선
+  // bbox 중심점과 요소 중심 거리 계산 (px 기준)
+  const distToBbox = (el) => {
+    if (!boxPxCss || boxPxCss.length !== 4) return 0;
+    const r = el.getBoundingClientRect();
+    const elCx = r.left + r.width / 2, elCy = r.top + r.height / 2;
+    const bCx = (boxPxCss[0] + boxPxCss[2]) / 2, bCy = (boxPxCss[1] + boxPxCss[3]) / 2;
+    return Math.hypot(elCx - bCx, elCy - bCy);
+  };
+
+  // 1) 정확히 일치 — bbox 있으면 가장 가까운 것, 없으면 가장 짧은 것
   const exact = cand.filter((el) => label(el) === want);
   if (exact.length) {
-    exact.sort((a, b) => label(a).length - label(b).length);
-    return exact[0];
+    return exact.sort((a, b) =>
+      boxPxCss ? distToBbox(a) - distToBbox(b) : label(a).length - label(b).length
+    )[0];
   }
-  // 2) 포함 — 포함하는 요소 중 가장 짧은(=가장 구체적인) 것. 긴 제목(유튜브 등)도 매칭되도록 캡 완화
+  // 2) 포함 — 가장 짧고 bbox에 가까운 것
   const partial = cand
     .filter((el) => { const l = label(el); return want.length >= 2 && l.includes(want) && l.length <= 200; })
-    .sort((a, b) => label(a).length - label(b).length);
+    .sort((a, b) => boxPxCss ? distToBbox(a) - distToBbox(b) : label(a).length - label(b).length);
   return partial[0] || null;
 }
 
@@ -290,19 +325,47 @@ function dataURItoBlob(dataURI) {
   return new Blob([ab], { type: mimeString });
 }
 
+function showLoadingIndicator() {
+  let el = document.getElementById("vv-loading");
+  if (el) return;
+  el = document.createElement("div");
+  el.id = "vv-loading";
+  Object.assign(el.style, {
+    position: "fixed", bottom: "24px", right: "24px",
+    background: "#1e40af", color: "white",
+    padding: "12px 18px", borderRadius: "10px",
+    fontSize: "15px", fontWeight: "bold",
+    zIndex: "2147483647", pointerEvents: "none",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+  });
+  el.textContent = "⏳ 처리 중...";
+  document.body.appendChild(el);
+}
+
+function hideLoadingIndicator() {
+  document.getElementById("vv-loading")?.remove();
+}
+
 async function processRequest(audioBlob, screenshotDataUrl) {
   if (audioBlob.size === 0) console.warn("⚠️ 오디오 데이터 없음");
 
+  speak("처리 중입니다");
+  showLoadingIndicator();
+
   const screenshotBlob = dataURItoBlob(screenshotDataUrl);
 
+  const viewportText = getViewportText();
   const fullText = getAllVisibleText(window);
-  console.log(`📝 통합 텍스트 길이: ${fullText.length}자`);
+  const domText = viewportText.length > 100 ? viewportText : fullText;
+  console.log(`📝 viewport: ${viewportText.length}자 / 전체: ${fullText.length}자`);
 
   const formData = new FormData();
   formData.append("audio", audioBlob, "input.webm");
   formData.append("screenshot", screenshotBlob, "input.png");
-  formData.append("dom", fullText.substring(0, 3000) || "텍스트 없음");
+  formData.append("dom", domText.substring(0, 3000) || "텍스트 없음");
   formData.append("dom_elements", JSON.stringify(getInteractiveElements()));
+  formData.append("zoom_level", String(vvA11y.zoom));
+  formData.append("device_pixel_ratio", String(window.devicePixelRatio || 1));
 
   try {
     console.log("🚀 서버로 전송 중...");
@@ -313,6 +376,7 @@ async function processRequest(audioBlob, screenshotDataUrl) {
     });
 
     const data = await response.json();
+    hideLoadingIndicator();
     console.log("✅ 결과 받음:", data);
 
     // 0. 음성 명령 → 접근성 클라이언트 처리 (백엔드 액션보다 우선)
@@ -363,9 +427,15 @@ async function processRequest(audioBlob, screenshotDataUrl) {
         const targetName = (data.action.target || "").trim();
         const ratio = window.devicePixelRatio || 1;
 
+        const boxPxCss = (() => {
+          const bp = data.action.box_px;
+          if (!bp || bp.length !== 4) return null;
+          return bp.map(v => v / ratio);
+        })();
+
         // 후보 3종을 각각 독립적으로 수집 (서로 다른 곳을 가리키는지 진단 표시용)
         // ① 모델이 말한 이름으로 텍스트 매칭 — 좌표/셀렉터 환각에 가장 강함
-        const byText  = targetName ? findByText(targetName) : null;
+        const byText  = targetName ? findByText(targetName, boxPxCss) : null;
 
         // ② CSS 셀렉터 (보이는 첫 매칭만)
         let bySel = null;
@@ -394,13 +464,6 @@ async function processRequest(audioBlob, screenshotDataUrl) {
         if (byCoord) cands.push({ el: byCoord, how: "coord",    label: "③ 좌표",       color: "#f59e0b" });
 
         // 진단 오버레이: 후보 전부 + 최종 선택 + 정보 패널 표시
-        // box_px: backend에서 넘어온 VLM/OmniParser 예측 박스 (물리 픽셀)
-        const boxPxCss = (() => {
-          const bp = data.action.box_px;
-          if (!bp || bp.length !== 4) return null;
-          const r2 = window.devicePixelRatio || 1;
-          return bp.map(v => v / r2);
-        })();
         showDecisionOverlay(cands, final, {
           recommend: targetName,
           grounding: data.action.grounding,
@@ -460,7 +523,13 @@ async function processRequest(audioBlob, screenshotDataUrl) {
         }
         if (el) {
           el.focus();
-          el.value = text;
+          // React controlled component는 .value 직접 변경을 무시하므로 native setter로 우회
+          const nativeSetter = Object.getOwnPropertyDescriptor(
+            el.tagName === "TEXTAREA" ? window.HTMLTextAreaElement.prototype : window.HTMLInputElement.prototype,
+            "value"
+          )?.set;
+          if (nativeSetter) nativeSetter.call(el, text);
+          else el.value = text;
           el.dispatchEvent(new Event("input",  { bubbles: true }));
           el.dispatchEvent(new Event("change", { bubbles: true }));
           console.log(`✅ 입력 완료: "${text}" → ${el.tagName}#${el.id}`);
@@ -497,21 +566,34 @@ async function processRequest(audioBlob, screenshotDataUrl) {
         else if (mode === "reset")     resetA11y();
       } else if (act === "close") {
         console.log(`❌ 팝업 닫기 시도: ${data.action.target}`);
-        const candidates = Array.from(
-          document.querySelectorAll("button, span, div"),
-        );
         const label = data.action.target || "";
-        const target = candidates.find(
-          (el) =>
-            /닫기|close|×/i.test(el.innerText || "") ||
-            (label && el.innerText && el.innerText.includes(label)),
-        );
-        if (target) target.click();
-        else console.warn("❌ 닫기 버튼을 찾을 수 없습니다.");
+        const candidates = Array.from(document.querySelectorAll(
+          "button, span, div, a, [role='button'], [role='dialog'] *"
+        )).filter(isVisible);
+        const getElText = (el) =>
+          el.innerText || el.getAttribute("aria-label") ||
+          el.getAttribute("title") || el.querySelector("img")?.getAttribute("alt") || "";
+        const closeTarget = candidates.find(el => {
+          const txt = getElText(el);
+          return /닫기|close|×|✕|닫음|cancel/i.test(txt) || (label && txt.includes(label));
+        });
+        if (closeTarget) {
+          closeTarget.click();
+        } else if (data.action.x_raw != null && data.action.y_raw != null) {
+          const ratio = window.devicePixelRatio || 1;
+          const cx = data.action.x_raw / ratio, cy = data.action.y_raw / ratio;
+          const hit = getDeepElementFromPoint(cx, cy);
+          if (hit) { hit.click(); console.log("닫기: 좌표 폴백 클릭"); }
+          else console.warn("❌ 닫기 버튼을 찾을 수 없습니다.");
+        } else {
+          console.warn("❌ 닫기 버튼을 찾을 수 없습니다.");
+        }
       }
     }
   } catch (error) {
+    hideLoadingIndicator();
     console.error("❌ 처리 에러:", error);
+    speak("서버 연결에 실패했습니다. 잠시 후 다시 시도해주세요.");
   }
 }
 

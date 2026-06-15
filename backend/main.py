@@ -38,6 +38,8 @@ async def process(
     screenshot: UploadFile = File(...),
     dom: str = Form(""),
     dom_elements: str = Form("[]"),
+    zoom_level: str = Form("100"),
+    device_pixel_ratio: str = Form("1.0"),
 ):
     print("🚀 요청 수신!")
 
@@ -63,7 +65,7 @@ async def process(
     try:
         # (1) STT
         command = stt_module.transcribe(audio_path)
-        print(f"User Command: {command}")
+        print(f"User Command: {command} | zoom={zoom_level} dpr={device_pixel_ratio}")
 
         # (2) OpenCUA
         # dom이 비어있으면 기본 텍스트 전달
